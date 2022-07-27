@@ -5,7 +5,8 @@ import java.util.Random;
 public class GcashApi {
 
     /**
-     *
+     * Accepts a request object containing request details like currency and amount
+     * Returns a response class that contains details like if the payment is successful or not and a reference id
      * */
     public GCashPaymentResponse submitPayment(GCashPaymentRequest request) {
         // processing code

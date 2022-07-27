@@ -5,6 +5,11 @@ import aggregator.datastore.PaymentProvider;
 import java.math.BigDecimal;
 import java.util.Currency;
 
+/**
+ *
+ * This is the request that we will use in the main class.
+ *
+ * */
 public class PaymentAggregatorRequest {
     private PaymentProvider provider;
     private Currency currency;
