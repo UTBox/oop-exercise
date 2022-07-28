@@ -25,7 +25,7 @@ public class Maya implements Payment {
     public void pay() {
         MayaApi mayaApi = new MayaApi();
         if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
-                amount.compareTo(new BigDecimal(1000000)) == 1
+                amount.compareTo(new BigDecimal(1000000)) == -1
         ) {
             String referenceID = mayaApi.payment(this.currency, this.amount);
 
