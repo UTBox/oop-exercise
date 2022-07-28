@@ -9,17 +9,15 @@ public class PaymentRules {
     public PaymentRules(PaymentAggregatorRequest paymentAggregatorRequest){
         this.paymentAggregatorRequest = paymentAggregatorRequest;
     }
-    public void paymentChecker(Long amount, String currencyType) {
+    public boolean paymentChecker(BigDecimal amount, String currencyType) {
         if (checkCurrency(currencyType) == true
                 && checkPaymentAmount(amount) == false) {
-            new MayaProcessor(paymentAggregatorRequest);
-        } else {
+            return true;
 // TODO: pass the payment record but mark boolean as fail
-        }
-
+        } return false;
     }
-    public boolean checkPaymentAmount (Long amount){
-        if (new BigDecimal(amount).compareTo(new BigDecimal(1000000)) == 1) {
+    public boolean checkPaymentAmount (BigDecimal amount){
+        if (new BigDecimal(String.valueOf(amount)).compareTo(new BigDecimal(1000000)) == 1) {
             return true;
         } else {
             return false;

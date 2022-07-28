@@ -1,8 +1,5 @@
 package aggregator;
 
-import aggregator.datastore.Datastore;
-import aggregator.datastore.PaymentRecord;
-
 public interface PaymentService {
     void executePayment(PaymentAggregatorRequest paymentAggregatorRequest);
 
