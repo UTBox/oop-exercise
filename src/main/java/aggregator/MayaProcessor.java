@@ -12,9 +12,9 @@ import java.util.Currency;
 
 public class MayaProcessor implements PaymentService {
     PaymentRules paymentRules;
+    MayaApi mayaApi = new MayaApi();
     @Override
     public void executePayment(PaymentAggregatorRequest paymentAggregatorRequest) {
-        MayaApi mayaApi = new MayaApi();
         BigDecimal paymentAmount = paymentAggregatorRequest.getAmount();
         Currency currency = paymentAggregatorRequest.getCurrency();
         String referenceId = mayaApi.payment(currency, paymentAmount);
@@ -22,12 +22,16 @@ public class MayaProcessor implements PaymentService {
         Datastore.save(new PaymentRecord(PaymentProvider.MAYA, referenceId,
                 paymentAmount.toString(), result ? PaymentStatus.SUCCESS : PaymentStatus.FAILED));
         //TODO: implement business rules
-//        if (paymentRules.paymentChecker(paymentAmount, currency.toString()) == true) {
-//            Datastore.save(new PaymentRecord(PaymentProvider.MAYA, referenceId,
-//                    paymentAmount.toString(), result ? PaymentStatus.SUCCESS : PaymentStatus.FAILED));
-//        } else {
-//            Datastore.save(new PaymentRecord(PaymentProvider.MAYA, referenceId,
-//                    paymentAmount.toString(), PaymentStatus.FAILED));
-//        }
+    }
+
+    @Override
+    public void failedPayment(PaymentAggregatorRequest paymentAggregatorRequest) {
+        BigDecimal paymentAmount = paymentAggregatorRequest.getAmount();
+        Currency currency = paymentAggregatorRequest.getCurrency();
+        String referenceId = mayaApi.payment(currency, paymentAmount);
+        boolean result = false;
+        Datastore.save(new PaymentRecord(PaymentProvider.MAYA, referenceId,
+                paymentAmount.toString(), result ? PaymentStatus.SUCCESS : PaymentStatus.FAILED));
+
     }
 }

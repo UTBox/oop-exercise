@@ -12,9 +12,10 @@ import java.util.Currency;
 
 public class GrabPayProcessor implements PaymentService {
     PaymentRules paymentRules;
+    GrabpayApi grabpayApi = new GrabpayApi();
     @Override
     public void executePayment(PaymentAggregatorRequest paymentAggregatorRequest) {
-        GrabpayApi grabpayApi = new GrabpayApi();
+
         BigDecimal paymentAmount = paymentAggregatorRequest.getAmount();
         Currency currency = paymentAggregatorRequest.getCurrency();
         try {
@@ -22,13 +23,21 @@ public class GrabPayProcessor implements PaymentService {
             Datastore.save(new PaymentRecord(PaymentProvider.GRAB, referenceId,
                         paymentAmount.toString(), PaymentStatus.SUCCESS));
             //TODO: implement business rules
-//            if (paymentRules.paymentChecker(paymentAmount, currency.toString()) == true) {
-//                Datastore.save(new PaymentRecord(PaymentProvider.GRAB, referenceId,
-//                        paymentAmount.toString(), PaymentStatus.SUCCESS));
-//            } else {
-//                Datastore.save(new PaymentRecord(PaymentProvider.GRAB, referenceId,
-//                        paymentAmount.toString(), PaymentStatus.FAILED));
-//            }
+        } catch (GrabPaymentFailedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void failedPayment(PaymentAggregatorRequest paymentAggregatorRequest) {
+        BigDecimal paymentAmount = paymentAggregatorRequest.getAmount();
+        Currency currency = paymentAggregatorRequest.getCurrency();
+        try {
+            grabpayApi.pay(currency, paymentAmount);
+            String referenceId = grabpayApi.pay(currency, paymentAmount);
+            Datastore.save(new PaymentRecord(PaymentProvider.GRAB, referenceId,
+                    paymentAmount.toString(), PaymentStatus.FAILED));
         } catch (GrabPaymentFailedException e) {
             throw new RuntimeException(e);
         }

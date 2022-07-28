@@ -3,6 +3,7 @@ package aggregator;
 import aggregator.datastore.PaymentProvider;
 
 public class PaymentServiceFactory {
+    private static PaymentService paymentService;
     public static PaymentService getServiceType(PaymentAggregatorRequest paymentAggregatorRequest) {
         if (paymentAggregatorRequest.getProvider() == PaymentProvider.GCASH) {
             return new GCashProcessor();

@@ -13,10 +13,10 @@ import java.util.Currency;
 
 public class GCashProcessor implements PaymentService{
     GCashPaymentResponse gCashPaymentResponse;
+    GcashApi gcashApi = new GcashApi();
 //    PaymentRules paymentRules;
     @Override
     public void executePayment(PaymentAggregatorRequest paymentAggregatorRequest) {
-        GcashApi gcashApi = new GcashApi();
         BigDecimal paymentAmount = paymentAggregatorRequest.getAmount();
         Currency currency = paymentAggregatorRequest.getCurrency();
         GCashPaymentRequest paymentRequest = new GCashPaymentRequest(currency, paymentAmount);
@@ -26,18 +26,17 @@ public class GCashProcessor implements PaymentService{
         Datastore.save(new PaymentRecord(PaymentProvider.GCASH, referenceID,
                     paymentAmount.toString(), result ? PaymentStatus.SUCCESS : PaymentStatus.FAILED));
 
-        /*
-TODO: implement business rules
-        if (paymentRules.paymentChecker(paymentAmount, currency.toString()) == true) {
+    }
 
-            Datastore.save(new PaymentRecord(PaymentProvider.GCASH, referenceID,
-                    paymentAmount.toString(), result ? PaymentStatus.SUCCESS : PaymentStatus.FAILED));
-        } else {
-            PaymentStatus result = PaymentStatus.FAILED;
-            Datastore.save(new PaymentRecord(PaymentProvider.GCASH, referenceID,
-                    paymentAmount.toString(), result));
-        }
-*/
-
+    @Override
+    public void failedPayment(PaymentAggregatorRequest paymentAggregatorRequest) {
+        BigDecimal paymentAmount = paymentAggregatorRequest.getAmount();
+        Currency currency = paymentAggregatorRequest.getCurrency();
+        GCashPaymentRequest paymentRequest = new GCashPaymentRequest(currency, paymentAmount);
+        gCashPaymentResponse = gcashApi.submitPayment(paymentRequest);
+        String referenceID = String.valueOf(gCashPaymentResponse.getPaymentId());
+        boolean result = false;
+        Datastore.save(new PaymentRecord(PaymentProvider.GCASH, referenceID,
+                paymentAmount.toString(), result ? PaymentStatus.SUCCESS : PaymentStatus.FAILED));
     }
 }
