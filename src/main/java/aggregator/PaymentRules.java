@@ -2,6 +2,7 @@ package aggregator;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 
 public class PaymentRules {
 
@@ -10,12 +11,20 @@ public class PaymentRules {
 //    public PaymentRules(PaymentAggregatorRequest paymentAggregatorRequest){
 //        this.paymentAggregatorRequest = paymentAggregatorRequest;
 //    }
-    public boolean paymentChecker(PaymentAggregatorRequest paymentAggregatorRequest, PaymentService paymentService) {
+    public void paymentChecker(List<PaymentService> paymentServiceList) {
+
+        //TODO: take only PaymentService rather than payment aggretator request, and pass the list
+        for (PaymentService paymentService: paymentServiceList) {
+            //TODO: pass the conditions here
+//            if (checkCurrency())
+        }
         if (checkCurrency(paymentAggregatorRequest.getCurrency())
                 && !(checkPaymentAmount(paymentAggregatorRequest.getAmount()))) {
-            paymentService.executePayment(paymentAggregatorRequest);
+            paymentService.executePayment(paymentAggregatorRequest.getAmount(), paymentAggregatorRequest.getCurrency());
 // TODO: pass the payment record but mark boolean as fail
-        } return false;
+        } else {
+            paymentService.failedPayment(paymentAggregatorRequest.getAmount(), paymentAggregatorRequest.getCurrency());
+        }
     }
     public boolean checkPaymentAmount (BigDecimal amount){
         if (amount.compareTo(new BigDecimal(1000000)) == 1) {
@@ -33,4 +42,5 @@ public class PaymentRules {
         }
     }
 }
+
 
