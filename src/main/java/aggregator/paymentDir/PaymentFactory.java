@@ -8,14 +8,11 @@ public class PaymentFactory {
         switch (request.getProvider()) {
             case MAYA:
                 return new Maya(request.getAmount(), request.getCurrency());
-
-//            case GRAB:
-//                return new GrabPay();
-//                break;
+            case GRAB:
+                return new GrabPay(request.getAmount(), request.getCurrency());
             case GCASH:
                 return new Gcash(request.getAmount(), request.getCurrency());
         }
-//        return null;
         return null;
     }
 }

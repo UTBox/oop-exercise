@@ -26,15 +26,16 @@ public class Gcash implements Payment {
     public void pay() {
         GcashApi gcashApi = new GcashApi();
         if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
-                amount.compareTo(new BigDecimal(1000000)) == -1
+                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
+                (amount.compareTo(new BigDecimal(0)) == 1)
         ) {
             GCashPaymentRequest gcashRequest = new GCashPaymentRequest(currency, amount);
             GCashPaymentResponse response = gcashApi.submitPayment(gcashRequest);
             String referenceID = String.valueOf(response.getPaymentId());
-
+            boolean successful = response.isPaymentSuccessful();
             Datastore.save(
                     new PaymentRecord(PaymentProvider.GCASH, referenceID,
-                            String.valueOf(amount), PaymentStatus.SUCCESS)
+                            String.valueOf(amount), successful ? PaymentStatus.SUCCESS : PaymentStatus.FAILED)
             );
 
         } else {

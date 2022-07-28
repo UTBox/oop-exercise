@@ -44,7 +44,7 @@ public class PaymentAggregator {
         // payments.forEach(payment -> payment.pay());
 
 
-        PaymentAggregatorRequest request = new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("PHP"), BigDecimal.valueOf(10));
+        PaymentAggregatorRequest request = new PaymentAggregatorRequest(PaymentProvider.GRAB, Currency.getInstance("PHP"), BigDecimal.valueOf(0L));
         new PaymentFactory().createPayment(
                 request
         );

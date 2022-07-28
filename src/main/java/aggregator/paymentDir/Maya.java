@@ -25,17 +25,15 @@ public class Maya implements Payment {
     public void pay() {
         MayaApi mayaApi = new MayaApi();
         if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
-                amount.compareTo(new BigDecimal(1000000)) == -1
+                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
+                (amount.compareTo(new BigDecimal(0)) == 1)
         ) {
             String referenceID = mayaApi.payment(this.currency, this.amount);
+            boolean successful = mayaApi.checkPayment(referenceID);
 
-            /** changed to output absolute SUCCESS status because the code for the API is random boolean */
-//            boolean status = mayaApi.checkPayment(referenceID);
-
-            PaymentStatus status = PaymentStatus.SUCCESS;
             Datastore.save(
                     new PaymentRecord(PaymentProvider.MAYA, referenceID,
-                            String.valueOf(amount), status)
+                            String.valueOf(amount), successful ? PaymentStatus.SUCCESS : PaymentStatus.FAILED)
             );
 
         } else {
