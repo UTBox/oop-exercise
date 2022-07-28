@@ -2,20 +2,17 @@ package aggregator;
 
 import aggregator.datastore.Datastore;
 import aggregator.datastore.PaymentProvider;
-import aggregator.datastore.PaymentRecord;
-import aggregator.datastore.PaymentStatus;
-import thirdpartyapi.maya.MayaApi;
+import aggregator.payment.Payment;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PaymentAggregator {
-    static MayaApi mayaApi = new MayaApi();
 
     public static void main(String[] args) {
-        List paymentsToProcess = List.of(
+        List<PaymentAggregatorRequest> paymentsToProcess = List.of(
                 new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
                 new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
                 new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(1000000)),
@@ -27,6 +24,13 @@ public class PaymentAggregator {
                 new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("AUD"), BigDecimal.valueOf(200)),
                 new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("AUD"), BigDecimal.valueOf(200)),
                 new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)));
+
+
+        PaymentFactory paymentFactory = new PaymentFactory();
+
+        List<Payment> payments = paymentsToProcess.stream().map(request -> paymentFactory.createPayment(request)).collect(Collectors.toList());
+
+        payments.forEach(payment -> payment.pay());
 
         //TODO: as a test, I will initialize multiple payments for different providers and a class should be able to take those payments and process them
 
