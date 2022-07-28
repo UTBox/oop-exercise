@@ -4,6 +4,7 @@ import aggregator.datastore.Datastore;
 import aggregator.datastore.PaymentProvider;
 import aggregator.datastore.PaymentRecord;
 import aggregator.datastore.PaymentStatus;
+import aggregator.paymentDir.PaymentFactory;
 import thirdpartyapi.maya.MayaApi;
 
 import java.math.BigDecimal;
@@ -15,24 +16,40 @@ public class PaymentAggregator {
     static MayaApi mayaApi = new MayaApi();
 
     public static void main(String[] args) {
-        List paymentsToProcess = List.of(
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(1000000)),
-                new PaymentAggregatorRequest(PaymentProvider.GRAB, Currency.getInstance("USD"), BigDecimal.valueOf(33)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("PHP"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(2)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("AUD"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("AUD"), BigDecimal.valueOf(200)),
-                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)));
+//        List paymentsToProcess = List.of(
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(1000000)),
+//                new PaymentAggregatorRequest(PaymentProvider.GRAB, Currency.getInstance("USD"), BigDecimal.valueOf(33)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("PHP"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(2)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("AUD"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("AUD"), BigDecimal.valueOf(200)),
+//                new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)));
 
         //TODO: as a test, I will initialize multiple payments for different providers and a class should be able to take those payments and process them
 
         //TODO: business rules
         // - we only accept PHP
         // - if amount of payment is beyond 1 million fail it
+
+
+        /** ideal code */
+        // List <Payment> payments = paymentsToProcess.stream().map(
+        //  request -> paymentFactory.createPayment(request).collect(Collectors.toList());
+        // )
+
+        // payments.forEach(payment -> payment.pay());
+
+
+        PaymentAggregatorRequest request = new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("PHP"), BigDecimal.valueOf(200));
+        new PaymentFactory().createPayment(
+                request
+        );
+
+
 
         // sample usage of maya api
 //        BigDecimal paymentAmount = BigDecimal.valueOf(100.00);
