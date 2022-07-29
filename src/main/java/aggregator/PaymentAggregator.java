@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PaymentAggregator {
-    static MayaApi mayaApi = new MayaApi();
+
 
     public static void main(String[] args) {
         List<PaymentAggregatorRequest> paymentsToProcess = List.of(
@@ -37,11 +37,8 @@ public class PaymentAggregator {
         // - we only accept PHP
         // - if amount of payment is beyond 1 million fail it
 
-
-        /** ideal code */
-        PaymentFactory paymentFactory = new PaymentFactory();
         List<Payment> payments = paymentsToProcess.stream().map(
-                request -> paymentFactory.createPayment(request)
+                request -> new PaymentFactory().createPayment(request)
         ).collect(Collectors.toList());
 
          payments.forEach(payment -> payment.pay());
