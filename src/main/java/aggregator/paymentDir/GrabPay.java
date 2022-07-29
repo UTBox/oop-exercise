@@ -28,10 +28,7 @@ public class GrabPay implements Payment {
         GrabpayApi grabpayApi = new GrabpayApi();
         Collator collator = Collator.getInstance();
 
-        if ((currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
-                (amount.compareTo(new BigDecimal(1000000)) == -1)) &&
-                (amount.compareTo(new BigDecimal(0)) == 1)
-        ) {
+        if (businessRule()) {
             String referenceID = "";
             try {
                 referenceID = String.valueOf(grabpayApi.pay(currency, amount));
@@ -52,5 +49,16 @@ public class GrabPay implements Payment {
             );
         }
 
+    }
+
+    @Override
+    public boolean businessRule() {
+        if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
+                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
+                (amount.compareTo(new BigDecimal(-1)) == 1)
+        ) {
+            return true;
+        }
+        return false;
     }
 }

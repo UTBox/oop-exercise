@@ -24,10 +24,7 @@ public class Maya implements Payment {
     @Override
     public void pay() {
         MayaApi mayaApi = new MayaApi();
-        if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
-                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
-                (amount.compareTo(new BigDecimal(0)) == 1)
-        ) {
+        if (businessRule()) {
             String referenceID = mayaApi.payment(this.currency, this.amount);
             boolean successful = mayaApi.checkPayment(referenceID);
 
@@ -43,5 +40,16 @@ public class Maya implements Payment {
         }
 
 
+    }
+
+    @Override
+    public boolean businessRule() {
+        if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
+                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
+                (amount.compareTo(new BigDecimal(-1)) == 1)
+        ) {
+            return true;
+        }
+        return false;
     }
 }

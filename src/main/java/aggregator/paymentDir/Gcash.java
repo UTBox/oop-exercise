@@ -25,10 +25,7 @@ public class Gcash implements Payment {
     @Override
     public void pay() {
         GcashApi gcashApi = new GcashApi();
-        if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
-                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
-                (amount.compareTo(new BigDecimal(0)) == 1)
-        ) {
+        if (businessRule()) {
             GCashPaymentRequest gcashRequest = new GCashPaymentRequest(currency, amount);
             GCashPaymentResponse response = gcashApi.submitPayment(gcashRequest);
             String referenceID = String.valueOf(response.getPaymentId());
@@ -47,5 +44,16 @@ public class Gcash implements Payment {
         }
 
 
+    }
+
+    @Override
+    public boolean businessRule() {
+        if (currency.equals(Currency.getInstance("PHP")) && //TODO: condition for being able to exceed 1M
+                (amount.compareTo(new BigDecimal(1000000)) == -1) &&
+                (amount.compareTo(new BigDecimal(-1)) == 1)
+        ) {
+            return true;
+        }
+        return false;
     }
 }
