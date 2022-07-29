@@ -18,7 +18,7 @@ public class PaymentAggregator {
     public static GrabpayApi grabpayApi = new GrabpayApi();
     public static GcashApi gcashApi = new GcashApi();
 
-    public static void main(String[] args) throws GrabPaymentFailedException {
+    public static void main(String[] args)  {
         List<PaymentAggregatorRequest> paymentsToProcess = List.of(
                     new PaymentAggregatorRequest(PaymentProvider.GCASH, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
                     new PaymentAggregatorRequest(PaymentProvider.MAYA, Currency.getInstance("USD"), BigDecimal.valueOf(200)),
