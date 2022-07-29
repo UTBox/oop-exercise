@@ -26,7 +26,7 @@ public class Grab implements Payment {
         if( currency.equals(Currency.getInstance("PHP")) && amount.compareTo(new BigDecimal(1000000))!=1 )   {
             try {
                 String referenceID = String.valueOf( grabpayApi.pay(currency,amount));
-                Datastore.save(new PaymentRecord(PaymentProvider.MAYA,referenceID,String.valueOf(amount),PaymentStatus.SUCCESS));
+                Datastore.save(new PaymentRecord(PaymentProvider.GRAB,referenceID,String.valueOf(amount),PaymentStatus.SUCCESS));
             } catch (GrabPaymentFailedException e) {
                 throw new RuntimeException(e);
             }
