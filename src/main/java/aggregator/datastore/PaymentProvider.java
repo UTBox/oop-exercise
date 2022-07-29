@@ -1,6 +1,10 @@
 package aggregator.datastore;
 
 import aggregator.*;
+import aggregator.Provider.Gcash;
+import aggregator.Provider.Grab;
+import aggregator.Provider.Maya;
+import aggregator.Provider.Payment;
 
 public enum PaymentProvider {
     GCASH{

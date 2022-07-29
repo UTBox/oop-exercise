@@ -1,5 +1,6 @@
 package aggregator;
 
+import aggregator.Provider.Payment;
 import aggregator.datastore.Datastore;
 import aggregator.datastore.PaymentProvider;
 import thirdpartyapi.gcash.GcashApi;
@@ -13,9 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PaymentAggregator {
-    static MayaApi mayaApi = new MayaApi();
-    static GrabpayApi grabpayApi = new GrabpayApi();
-    static GcashApi gcashApi = new GcashApi();
+    public static MayaApi mayaApi = new MayaApi();
+    public static GrabpayApi grabpayApi = new GrabpayApi();
+    public static GcashApi gcashApi = new GcashApi();
 
     public static void main(String[] args) throws GrabPaymentFailedException {
         List<PaymentAggregatorRequest> paymentsToProcess = List.of(
@@ -36,41 +37,9 @@ public class PaymentAggregator {
         List<Payment> payments = paymentsToProcess.stream().map(request -> paymentFactory.requestPayment(request)).collect(Collectors.toList());
         payments.forEach(payment -> payment.pay());
 
-
-
-
-
         //TODO: business rules
         // - we only accept PHP
         // - if amount of payment is beyond 1 million fail it
-
-
-
-
-
-
-        // sample usage of maya api
-//        BigDecimal paymentAmount = BigDecimal.valueOf(100.00);
-//        Currency currency = Currency.getInstance("PHP");
-//        String referenceId = mayaApi.payment(currency, paymentAmount);
-//        boolean successful = mayaApi.checkPayment(referenceId);
-//        Datastore.save(new PaymentRecord(PaymentProvider.MAYA, referenceId, paymentAmount.toString(), successful?PaymentStatus.SUCCESS:PaymentStatus.FAILED));
-
-        // usage of Grab API
-//        BigDecimal paymentAmount = BigDecimal.valueOf(100.00);
-//        Currency currency = Currency.getInstance("PHP");
-//        String referenceId = grabpayApi.pay(currency, paymentAmount);
-//        boolean success = new Random().nextBoolean();
-//        Datastore.save(new PaymentRecord(PaymentProvider.GRAB, referenceId, paymentAmount.toString(), success?PaymentStatus.SUCCESS:PaymentStatus.FAILED));
-
-//        //Usage GCash Api
-//        BigDecimal paymentAmount = BigDecimal.valueOf(100.00);
-//        Currency currency = Currency.getInstance("PHP");
-//        GCashPaymentRequest request = new GCashPaymentRequest(currency,paymentAmount);
-//        GCashPaymentResponse gCashPaymentResponse = gcashApi.submitPayment(request);
-//        String referenceId = String.valueOf(gCashPaymentResponse.getPaymentId());
-//        boolean success = gCashPaymentResponse.isPaymentSuccessful();
-//        Datastore.save(new PaymentRecord(PaymentProvider.GCASH, referenceId, paymentAmount.toString(), success?PaymentStatus.SUCCESS:PaymentStatus.FAILED));
 
         Datastore.showAllRecords();
     }

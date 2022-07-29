@@ -1,4 +1,4 @@
-package aggregator;
+package aggregator.Provider;
 
 public interface Payment {
 

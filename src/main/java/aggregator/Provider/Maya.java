@@ -1,4 +1,4 @@
-package aggregator;
+package aggregator.Provider;
 
 import aggregator.datastore.Datastore;
 import aggregator.datastore.PaymentProvider;

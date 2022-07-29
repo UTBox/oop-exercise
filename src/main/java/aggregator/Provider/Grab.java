@@ -1,4 +1,4 @@
-package aggregator;
+package aggregator.Provider;
 
 import aggregator.datastore.Datastore;
 import aggregator.datastore.PaymentProvider;
@@ -8,7 +8,6 @@ import thirdpartyapi.grabpay.GrabPaymentFailedException;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.Random;
 
 import static aggregator.PaymentAggregator.grabpayApi;
 
